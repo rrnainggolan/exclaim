@@ -2,10 +2,20 @@
 
 @section('content')
 <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
+  <div class="row">
+    <div class="col-md-3">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">My Claims</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Make Claim</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-9">
       <div class="card">
-        <div class="card-header">Dashboard</div>
+        <div class="card-header">My Claims</div>
 
         <div class="card-body">
           @if (session('status'))
