@@ -24,7 +24,7 @@ class CurrencySeeder extends Seeder
             ],
             [
                 'code' => 'USD',
-                'name' => 'American Dollar'
+                'name' => 'US Dollar'
             ],
             [
                 'code' => 'EUR',
