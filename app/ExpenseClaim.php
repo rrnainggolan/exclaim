@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExpenseClaim extends Model
 {
+    
     protected $fillable = [
         'code',
         'user_id',
