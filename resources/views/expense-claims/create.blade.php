@@ -6,7 +6,7 @@
     <div class="col-md-3">
       <ul class="nav flex-column">
         <li class="nav-item">
-          <a class="nav-link active" href="{{ route('home') }}">My Claims</a>
+          <a class="nav-link active" href="{{ route('expense-claims.index') }}">My Claims</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{ route('expense-claims.create') }}">Make Claim</a>
