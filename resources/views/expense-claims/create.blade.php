@@ -80,17 +80,17 @@
               </div>
               <div class="col-auto">
                 {{ Form::file('expenses[0][file][]', $attributes = [
-                  'id' => 'babi',
+                  'id' => 'attachments1',
                   'class' => 'custom-file-input',
                   'multiple' => 'multiple',
                 ]) }}
-                {{ Form::label('babi', 'Attachments', [
+                {{ Form::label('attachments1', 'Attachments', [
                   'class' => 'custom-file-label'
                 ]) }}
               </div>
-              <div class="col-8">
+              <div class="col-9">
                 {{ Form::textarea('expenses[0][remarks]', '', [
-                  'rows' => 3,
+                  'rows' => 4,
                   'placeholder' => 'Type remarks if any',
                   'class' => 'form-control'
                 ]) }}
@@ -109,7 +109,7 @@
 
 @push('scripts')
   <script>
-    // DATERANGE PICKER //
+    // DATERANGE PICKER
     $('input[name="period_date"]').daterangepicker({
         autoUpdateInput: false,
         locale: {
@@ -124,6 +124,23 @@
     $('input[name="period_date"]').on('cancel.daterangepicker', function(ev, picker) {
       $(this).val('');
     });
+
+    // MULTIPLE FILE INPUT 
+    $('#attachments1').on('change', function(e) {
+      var labelValue;
+      var files = $('#attachments1').prop("files");
+      var names = $.map(files, function(val) { 
+        return val.name; 
+      });
+      
+      if(names.length > 1) {
+        labelValue = names.length + ' files selected';
+      } else {
+        labelValue = names[0];
+      }
+
+      $(this).next('.custom-file-label').html(labelValue);
+    })
 
   </script>
 @endpush
