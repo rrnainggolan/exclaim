@@ -21,7 +21,8 @@ class CreateExpenseClaimsApprovedTable extends Migration
 
             $table->bigInteger('user_id')->unsigned()->index();
             $table->foreign('user_id')->references('id')->on('users');
-            
+
+            $table->boolean('approved');
             $table->timestamps();
         });
     }
