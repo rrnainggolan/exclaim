@@ -7,6 +7,20 @@ use Carbon\Carbon;
 
 class ExpenseClaimRepository
 {
+    public function getExpenseClaimsByUserId($userId)
+    {
+        $expenseClaims = DB::table('expense_claims')
+            ->select([
+                'expense_claims.*',
+                DB::raw('SUM(DISTINCT expenses.amount) AS amount_total'),
+            ])
+            ->leftJoin('expenses', 'expense_claims.id', '=', 'expenses.expense_claim_id')
+            ->groupBy('expenses.expense_claim_id', 'expense_claims.id')
+            ->get();
+
+        return $expenseClaims;
+    }
+
     /**
      * Create Expense Claim by using database transactions
      */
