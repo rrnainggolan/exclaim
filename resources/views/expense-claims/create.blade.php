@@ -71,6 +71,7 @@
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                       <div class="input-group-text">Rp.</div>
+                      {{ Form::hidden('expenses[0][currency]', 1) }}
                   </div>
                   {{ Form::text('expenses[0][amount]', '', [
                   'placeholder' => 'Input the amount',
