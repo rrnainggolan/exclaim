@@ -15,7 +15,7 @@
     </div>
     <div class="col-md-9">
       <div class="card">
-        <div class="card-header">My Claims</div>
+        <div class="card-header">My Pending Claims</div>
         <div class="card-body">
 
           <table class="table">
@@ -29,7 +29,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($expenseClaims as $expenseClaim)
+              @foreach($expenseClaimsPending as $expenseClaim)
               <tr>
                 <th scope="row">{{ $loop->iteration }}</th>
                 <td>
@@ -51,6 +51,49 @@
           </table>
 
         </div>
+      </div>
+
+      <div class="card">
+          <div class="card-header">My Completed Claims</div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Code</th>
+                  <th scope="col">Period</th>
+                  <th scope="col">Total Amount</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($expenseClaimsCompleted as $expenseClaim)
+                <tr>
+                    <th scope="row">{{ $loop->iteration }}</th>
+                    <td>
+                      <a href="{{ route('expense-claims.show', $expenseClaim->id) }}">
+                        {{ $expenseClaim->code }}
+                      </a>
+                    </td>
+                    <td>
+                      {{ \Carbon\Carbon::parse($expenseClaim->start_date)->format('j M, Y') }} to 
+                      {{ \Carbon\Carbon::parse($expenseClaim->end_date)->format('j M, Y') }}
+                    </td>
+                    <td>
+                      @money(($expenseClaim->amount_total - $expenseClaim->cash_advance), 'IDR', true)
+                    </td>
+                    <td>
+                      @if($expenseClaim->total_approved >= 2)
+                        Approved
+                      @else
+                        Rejected
+                      @endif
+                    </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
       </div>
     </div>
   </div>
