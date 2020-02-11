@@ -14,10 +14,10 @@ class ExpenseClaimService
         return $expenseClaims;
     }
 
-    public function getExpenseClaimsById($userId)
+    public function getExpenseClaimsByUserId($userId)
     {
-        $expenseClaims = ExpenseClaim::where('user_id', $userId)
-            ->get();
+        $expenseClaimRepository = new ExpenseClaimRepository();
+        $expenseClaims = $expenseClaimRepository->getExpenseClaimsByUserId($userId);
 
         return $expenseClaims;
     }
