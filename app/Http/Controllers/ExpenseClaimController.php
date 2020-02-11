@@ -26,7 +26,11 @@ class ExpenseClaimController extends Controller
      */
     public function index()
     {
-        return view('expense-claims.index');
+        $userId = Auth::id();
+        $expenseClaimService = new ExpenseClaimService();
+        $expenseClaims = $expenseClaimService->getExpenseClaimsById($userId);
+
+        return view('expense-claims.index', compact('expenseClaims'));
     }
 
     /**
@@ -96,7 +100,10 @@ class ExpenseClaimController extends Controller
      */
     public function show($id)
     {
-        //
+        $expenseClaimService = new ExpenseClaimService();
+        $expenseClaim = $expenseClaimService->getExpenseClaim($id);
+
+        return view('expense-claims.show', compact('expenseClaim'));
     }
 
     /**
