@@ -17,7 +17,37 @@
       <div class="card">
         <div class="card-header">My Claims</div>
         <div class="card-body">
-          INDEX
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Code</th>
+                <th scope="col">Period</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">Submitted at</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($expenseClaims as $expenseClaim)
+              <tr>
+                <th scope="row">{{ $loop->iteration }}</th>
+                <td>
+                  <a href="{{ route('expense-claims.show', $expenseClaim->id) }}">
+                    {{ $expenseClaim->code }}
+                  </a>
+                </td>
+                <td>
+                  {{ \Carbon\Carbon::parse($expenseClaim->start_date)->format('j M, Y') }} to 
+                  {{ \Carbon\Carbon::parse($expenseClaim->end_date)->format('j M, Y') }}
+                </td>
+                <td>@money($expenseClaim->amount_total, 'IDR', true)</td>
+                <td>{{ $expenseClaim->created_at }}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+
         </div>
       </div>
     </div>
