@@ -18,7 +18,7 @@ class ExpenseClaimRepository
             ->select([
                 'expense_claims.*',
                 DB::raw('SUM(DISTINCT expenses.amount) AS amount_total'),
-                DB::raw('COUNT(expense_claims_approved.user_id) AS total_approved')
+                DB::raw('SUM(expense_claims_approved.approved) AS total_approved')
             ])
             ->leftJoin('expenses', 'expense_claims.id', '=', 'expenses.expense_claim_id')
             ->leftJoin('expense_claims_approved', 'expense_claims.id', '=', 'expense_claims_approved.expense_claim_id')
