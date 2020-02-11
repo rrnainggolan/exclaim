@@ -41,7 +41,9 @@
                   {{ \Carbon\Carbon::parse($expenseClaim->start_date)->format('j M, Y') }} to 
                   {{ \Carbon\Carbon::parse($expenseClaim->end_date)->format('j M, Y') }}
                 </td>
-                <td>@money($expenseClaim->amount_total, 'IDR', true)</td>
+                <td>
+                  @money(($expenseClaim->amount_total - $expenseClaim->cash_advance), 'IDR', true)
+                </td>
                 <td>{{ $expenseClaim->created_at }}</td>
               </tr>
               @endforeach
