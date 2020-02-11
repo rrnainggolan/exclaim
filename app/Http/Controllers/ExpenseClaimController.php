@@ -28,7 +28,7 @@ class ExpenseClaimController extends Controller
     {
         $userId = Auth::id();
         $expenseClaimService = new ExpenseClaimService();
-        $expenseClaims = $expenseClaimService->getExpenseClaimsById($userId);
+        $expenseClaims = $expenseClaimService->getExpenseClaimsByUserId($userId);
 
         return view('expense-claims.index', compact('expenseClaims'));
     }
