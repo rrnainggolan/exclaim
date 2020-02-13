@@ -20,11 +20,9 @@ class CreateExpenseAttachmentsTable extends Migration
             $table->bigInteger('expense_id')->unsigned()->index();
             $table->foreign('expense_id')->references('id')->on('expenses');
 
-            $table->binary('file');
+            $table->string('filename');
             $table->timestamps();
         });
-
-        DB::statement("ALTER TABLE `expense_attachments` MODIFY `file` MEDIUMBLOB");
     }
 
     /**
