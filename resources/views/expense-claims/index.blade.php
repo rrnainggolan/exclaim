@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card mt-4">
           <div class="card-header">My Completed Claims</div>
           <div class="card-body">
             <table class="table">
