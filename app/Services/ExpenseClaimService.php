@@ -78,8 +78,7 @@ class ExpenseClaimService
      */
     public function createExpenseClaim(Array $data)
     {
-        $expenseClaimRepository = new ExpenseClaimRepository();
-        $expenseClaim = $expenseClaimRepository->createExpenseClaim($data);
+        $expenseClaim = ExpenseClaim::create($data);
 
         return $expenseClaim;
     }
