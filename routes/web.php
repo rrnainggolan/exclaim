@@ -22,3 +22,4 @@ Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('expense-claims', 'ExpenseClaimController');
+Route::get('/{foldername}/{filename}', 'FileController')->where(['filename' => '.*']);
