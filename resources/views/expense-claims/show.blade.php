@@ -49,7 +49,7 @@
                   <ul>
                     <li>Expense Type: {{ $expense->expenseType->name }}</li>
                     <li>Amount: @money($expense->amount, 'IDR', true)</li>
-                    <li>Remarks:</li>
+                    <li>Remarks: {{ $expense->remarks }}</li>
                     <li>
                       Attachments:
                       <ul>
