@@ -8,7 +8,7 @@ class ExpenseAttachment extends Model
 {
     protected $fillable = [
         'expense_id',
-        'file'
+        'filename'
     ];
 
     public function expense()
