@@ -62,30 +62,26 @@ class ExpenseClaimController extends Controller
         $request->validate([
             'period_date' => 'required',
             'expenses.0.type' => 'required',
+            'expenses.*.type' => 'required_with:expenses.*.amount',
+            'expenses.*.amount' => 'required_with:expenses.*.type',
             'expenses.*.remarks' => 'nullable',
-            'expenses.*.file.*' => 'image|mimes:jpeg,png,bmp,jpg,gif,svg,pdf|max:20000'
+            'expenses.*.file.*' => 'mimes:jpeg,png,bmp,jpg,gif,svg,pdf|max:20000'
         ]);
 
         $periodDate = explode(' - ', $request->period_date);
         $startDate = Carbon::createFromFormat('d/m/Y', $periodDate[0])->startOfDay()->format('Y-m-d H:i:s');
         $endDate = Carbon::createFromFormat('d/m/Y', $periodDate[1])->startOfDay()->format('Y-m-d H:i:s');
-
-        for($i=0; $i < count($request->expenses); $i++) {
-            if($request->expenses[$i]['type']) {
-                $request->validate([
-                    'expenses.'.$i.'.*' => 'required',
-                    'expenses.'.$i.'.remarks' => 'nullable',
-                ]);
-            }
-        }
         
         $data = [
             'code' => strtoupper(uniqid('EC')),
             'user_id' => Auth::user()->id,
             'start_date' => $startDate,
-            'end_date' => $endDate,
-            'cash_advance' => $request->cash_advance
+            'end_date' => $endDate
         ];
+
+        if($request->cash_advance) {
+            $data['cash_advance'] = $request->cash_advance;
+        }
 
         $expenseClaimService = new ExpenseClaimService();
         $expenseClaim = $expenseClaimService->createExpenseClaim($data);
