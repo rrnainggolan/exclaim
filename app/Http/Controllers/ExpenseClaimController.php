@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\CurrencyService;
 use App\Services\ExpenseTypeService;
 use App\Services\ExpenseClaimService;
+use App\Services\ExpenseService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -83,14 +84,17 @@ class ExpenseClaimController extends Controller
             'user_id' => Auth::user()->id,
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'cash_advance' => $request->cash_advance,
-            'expenses' => $request->expenses
+            'cash_advance' => $request->cash_advance
         ];
 
         $expenseClaimService = new ExpenseClaimService();
         $expenseClaim = $expenseClaimService->createExpenseClaim($data);
 
-        return $expenseClaim;
+        $expenseService = new ExpenseService();
+        $expenseService->createExpenses($expenseClaim->id, $request->expenses);
+
+        return redirect()->route('expense-claims.index')
+            ->with('flash_message', 'Claim with code: '. $expenseClaim->code .' added');
     }
 
     /**
