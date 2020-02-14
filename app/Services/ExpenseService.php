@@ -19,6 +19,10 @@ class ExpenseService
         $updatedAt = Carbon::now()->format('Y-m-d H:i:s');
 
         foreach($expenses as $expense) {
+            if(!$expense['type'] || !$expense['amount']) {
+                continue;
+            }
+
             $expenseData = [
                 'expense_claim_id' => $expenseClaim,
                 'expense_type_id' => $expense['type'],
@@ -32,18 +36,21 @@ class ExpenseService
             $createExpense = Expense::create($expenseData);
             $lastInsertedExpenseId = $createExpense->id;
 
-            $i = 1;
-            foreach($expense['file'] as $file) {
-                $filename = 'exclaim-'.$expenseClaim.'-attachment-'.$i.'.'.$file->getClientOriginalExtension();
-                
-                $attachmentData = [
-                    'expense_id' => $lastInsertedExpenseId,
-                    'filename' => $filename
-                ];
-                ExpenseAttachment::create($attachmentData);
-
-                $file->storeAs('attachments', $filename);
-                $i++;
+            if(array_key_exists('file', $expense)) {
+                $i = 1;
+                foreach($expense['file'] as $file) {
+                    $ext = $file->getClientOriginalExtension();
+                    $filename = 'exc-'.$expenseClaim.'-exp-'.$lastInsertedExpenseId.'-att-'.$i.'.'.$ext;
+                    
+                    $attachmentData = [
+                        'expense_id' => $lastInsertedExpenseId,
+                        'filename' => $filename
+                    ];
+                    ExpenseAttachment::create($attachmentData);
+    
+                    $file->storeAs('attachments', $filename);
+                    $i++;
+                }
             }
         }
     }
