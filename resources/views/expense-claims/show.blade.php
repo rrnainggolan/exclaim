@@ -33,28 +33,39 @@
           <p>Expenses:</p>
           <div id="accordion">
             @foreach ($expenseClaim->expenses as $expense)
-              <div class="card">
-                <div class="card-header" id="heading-{{ $expense->id }}">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" 
-                    data-target="#collapse-{{ $expense->id }}" aria-expanded="true" 
-                    aria-controls="collapse-{{ $expense->id }}">
-                    {{ $expense->expenseType->name }}: @money($expense->amount, 'IDR', true)
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapse-{{ $expense->id }}" class="collapse {{ $loop->first ? "show" : "" }}" 
-                aria-labelledby="heading-{{ $expense->id }}" data-parent="#accordion">
-                  <div class="card-body">
-                    <ul>
-                      <li>Expense Type: {{ $expense->expenseType->name }}</li>
-                      <li>Amount: @money($expense->amount, 'IDR', true)</li>
-                      <li>Remarks:</li>
-                      <li>Attachments:</li>
-                    </ul>
-                  </div>
+            <div class="card">
+              <div class="card-header" id="heading-{{ $expense->id }}">
+                <h5 class="mb-0">
+                  <button class="btn btn-link" data-toggle="collapse" 
+                  data-target="#collapse-{{ $expense->id }}" aria-expanded="true" 
+                  aria-controls="collapse-{{ $expense->id }}">
+                  {{ $expense->expenseType->name }}: @money($expense->amount, 'IDR', true)
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse-{{ $expense->id }}" class="collapse {{ $loop->first ? "show" : "" }}" 
+              aria-labelledby="heading-{{ $expense->id }}" data-parent="#accordion">
+                <div class="card-body">
+                  <ul>
+                    <li>Expense Type: {{ $expense->expenseType->name }}</li>
+                    <li>Amount: @money($expense->amount, 'IDR', true)</li>
+                    <li>Remarks:</li>
+                    <li>
+                      Attachments:
+                      <ul>
+                        @foreach($expense->expenseAttachments as $attachment)
+                        <li>
+                          <a href="{{ url('/attachments/'.$attachment->filename) }}">
+                              {{ $attachment->filename }}
+                          </a>
+                        </li>
+                        @endforeach
+                      </ul>
+                    </li>
+                  </ul>
                 </div>
               </div>
+            </div>
             @endforeach
           </div>
         </div>
