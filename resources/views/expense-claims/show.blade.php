@@ -28,6 +28,10 @@
             <li>Cash Advance: 
               @money($expenseClaim->cash_advance, 'IDR', true)
             </li>
+            <li>
+              Description:
+              {{ $expenseClaim->description }}
+            </li>
           </ul>
 
           <p>Expenses:</p>

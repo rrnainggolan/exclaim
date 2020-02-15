@@ -76,7 +76,8 @@ class ExpenseClaimController extends Controller
             'code' => strtoupper(uniqid('EC')),
             'user_id' => Auth::user()->id,
             'start_date' => $startDate,
-            'end_date' => $endDate
+            'end_date' => $endDate,
+            'description' => $request->description,
         ];
 
         if($request->cash_advance) {
