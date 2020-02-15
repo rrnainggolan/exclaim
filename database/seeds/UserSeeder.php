@@ -18,6 +18,21 @@ class UserSeeder extends Seeder
                 'name' => 'Ricardo Nainggolan',
                 'email' => 'ricardo.nainggolan@arnocindonesia.com',
                 'password' => Hash::make('123456')
+            ],
+            [
+                'name' => 'Aristo Getriadi',
+                'email' => 'aristo.getriadi@arnocindonesia.com',
+                'password' => Hash::make('123456')
+            ],
+            [
+                'name' => 'Coku Sembiring',
+                'email' => 'coku.sembiring@arnocindonesia.com',
+                'password' => Hash::make('123456')
+            ],
+            [
+                'name' => 'Nopay',
+                'email' => 'nopay@arnocindonesia.com',
+                'password' => Hash::make('123456')
             ]
         ];
 
