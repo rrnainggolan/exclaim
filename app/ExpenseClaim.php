@@ -12,7 +12,8 @@ class ExpenseClaim extends Model
         'user_id',
         'start_date',
         'end_date',
-        'cash_advance'
+        'cash_advance',
+        'description'
     ];
 
     protected $attributes = [

@@ -23,6 +23,7 @@ class CreateExpenseClaimsTable extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->decimal('cash_advance', 15, 0)->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
