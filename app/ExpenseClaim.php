@@ -30,8 +30,18 @@ class ExpenseClaim extends Model
         return $this->hasMany('App\Expense');
     }
 
-    public function expenseApprovers()
+    public function expenseClaimsApproved()
     {
-        return $this->hasMany('App\ExpenseApprover');
+        return $this->hasMany('App\ExpenseClaimsApproved');
+    }
+
+    public function getRejectedByAttribute()
+    {
+        return $this->expenseClaimsApproved->where('approved', 0)->first();
+    }
+
+    public function getApprovedByAttribute($approverId)
+    {
+        return $this->expenseClaimsApproved->where('user_id', $approverId)->first();
     }
 }

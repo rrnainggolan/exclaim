@@ -9,6 +9,7 @@ use App\Services\ExpenseClaimService;
 use App\Services\ExpenseService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Bouncer;
 
 class ExpenseClaimController extends Controller
 {
@@ -29,10 +30,11 @@ class ExpenseClaimController extends Controller
     {
         $userId = Auth::id();
         $expenseClaimService = new ExpenseClaimService();
-        $expenseClaimsPending = $expenseClaimService->getExpenseClaimsPendingByUserId($userId);
-        $expenseClaimsCompleted = $expenseClaimService->getExpenseClaimsCompletedByUserId($userId);
 
-        return view('expense-claims.index', compact('expenseClaimsPending', 'expenseClaimsCompleted'));
+        $myPendingExpenseClaims = $expenseClaimService->getMyPendingExpenseClaims();
+        $myCompletedExpenseClaims = $expenseClaimService->getMyCompletedExpenseClaims();
+
+        return view('expense-claims.index', compact('myPendingExpenseClaims', 'myCompletedExpenseClaims'));
     }
 
     /**
@@ -91,7 +93,8 @@ class ExpenseClaimController extends Controller
         $expenseService->createExpenses($expenseClaim->id, $request->expenses);
 
         return redirect()->route('expense-claims.index')
-            ->with('flash_message', 'Claim with code: '. $expenseClaim->code .' added');
+            ->with('flash_message', 'Claim with code: '. $expenseClaim->code .' added')
+            ->with('class', 'success');
     }
 
     /**
@@ -140,5 +143,95 @@ class ExpenseClaimController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Display all active expenses claims
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function active()
+    {
+        $this->authorize('approve-claims');
+
+        $expenseClaimService = new ExpenseClaimService();
+        $activeExpenseClaims = $expenseClaimService->getActiveExpenseClaims();
+        $data = compact('activeExpenseClaims');
+
+        return view('expense-claims.active', $data);
+    }
+
+    /**
+     * Display all completed expenses claims
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function completed()
+    {
+        $this->authorize('approve-claims');
+
+        $expenseClaimService = new ExpenseClaimService();
+        $completedExpenseClaims = $expenseClaimService->getCompletedExpenseClaims();
+
+        return view('expense-claims.completed', compact('completedExpenseClaims'));
+    }
+
+    /**
+     * Approve the claim request
+     * 
+     * @return App\ExpenseClaimApproved
+     */
+    public function approve(Request $request)
+    {
+        $this->authorize('approve-claims');
+
+        $data = [
+            'expense_claim_id' => $request->id,
+            'user_id' => $request->user_id,
+            'approved' => 1
+        ];
+
+        $expenseClaimService = new ExpenseClaimService();
+        $approveClaim = $expenseClaimService->approveClaim($data);
+
+        if(!$approveClaim) {
+            return redirect()->route('expense-claims.show', ['id' => $approveClaim->expense_claim_id])
+            ->with('flash_message', 'Error, claim already approved')
+            ->with('class', 'alert');
+        }
+
+        return redirect()->route('expense-claims.completed')
+            ->with('flash_message', 'Claim successfully approved!')
+            ->with('class', 'success');
+    }
+
+    /**
+     * Reject the claim request
+     * 
+     * @return App\ExpenseClaimApproved
+     */
+    public function reject(Request $request)
+    {
+        $this->authorize('approve-claims');
+
+        $data = [
+            'expense_claim_id' => $request->id,
+            'user_id' => $request->user_id,
+            'reason' => $request->reason,
+            'approved' => 0
+        ];
+
+        $expenseClaimService = new ExpenseClaimService();
+        $rejectClaim = $expenseClaimService->rejectClaim($data);
+
+        if(!$rejectClaim) {
+            return redirect()->route('expense-claims.show', ['id' => $rejectClaim->expense_claim_id])
+            ->with('flash_message', 'Error, claim already rejected')
+            ->with('class', 'alert');
+        }
+
+        return redirect()->route('expense-claims.completed')
+            ->with('flash_message', 'Claim successfully rejected!')
+            ->with('class', 'success');
     }
 }

@@ -14,12 +14,21 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'ExpenseClaimController@index')->name('home');
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('expense-claims/active', 'ExpenseClaimController@active')
+    ->name('expense-claims.active');
+Route::get('expense-claims/completed', 'ExpenseClaimController@completed')
+    ->name('expense-claims.completed');
+    
 Route::resource('expense-claims', 'ExpenseClaimController');
+Route::post('expense-claims/{id}/approve', 'ExpenseClaimController@approve')
+    ->name('expense-claims.approve');
+Route::post('expense-claims/{id}/reject', 'ExpenseClaimController@reject')
+    ->name('expense-claims.reject');
+
 Route::get('/{foldername}/{filename}', 'FileController')->where(['filename' => '.*']);

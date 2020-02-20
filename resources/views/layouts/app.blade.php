@@ -75,14 +75,23 @@
     </nav>
 
     <main class="py-4">
-      @yield('content')
+      <div class="container">
+        <div class="row">
+          @auth 
+          <div class="col-md-3">
+              @include('layouts.sidebar')
+          </div>
+          @endauth
+          <div class="col">
+              @yield('content')
+          </div>
+        </div>
+      </div>
     </main>
   </div>
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/moment.min.js') }}"></script>
-    <script src="{{ asset('js/daterangepicker.min.js') }}"></script>
-    @stack('scripts')
+  <!-- Scripts -->
+  <script src="{{ asset('js/app.js') }}"></script>
+  @stack('scripts')
 </body>
 
 </html>

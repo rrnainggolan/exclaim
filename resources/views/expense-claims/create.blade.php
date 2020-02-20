@@ -1,129 +1,118 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link active" href="{{ route('expense-claims.index') }}">My Claims</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('expense-claims.create') }}">Make Claim</a>
-        </li>
-      </ul>
-    </div>
-    <div class="col-md-9">
-      <div class="card">
-        <div class="card-header">Make Claim</div>
-        <div class="card-body">
+  <div class="card">
+    <div class="card-header">New Expenses Claim</div>
+    <div class="card-body">
 
-          @if ($errors->any())
-          <div class="alert alert-danger">
-            <ul>
-              @foreach ($errors->all() as $error)
-              <li>{{ $error }}</li>
-              @endforeach
-            </ul>
+      @if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+          @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
+
+      {{ Form::open([
+        'route' => 'expense-claims.store', 
+        'id' => 'expense_claim-form',
+        'files' => true
+      ]) }}
+
+        <div class="form-group row">
+          <div class="col-12">{{ Form::label('period', 'Period of Claim') }}</div>
+          <div class="col-6">
+            {{ Form::text('period_date', '', [
+                'class' => 'form-control', 
+                'placeholder' => 'Pick date period',
+                'autocomplete' => 'off'
+                ]) }}
           </div>
-          @endif
+        </div>
 
-          {{ Form::open([
-            'route' => 'expense-claims.store', 
-            'id' => 'expense_claim-form',
-            'files' => true
-          ]) }}
-
-            <div class="form-group row">
-              <div class="col-12">{{ Form::label('period', 'Period of Claim') }}</div>
-              <div class="col-6">
-                {{ Form::text('period_date', '', [
-                    'class' => 'form-control', 
-                    'placeholder' => 'Pick date period',
-                    'autocomplete' => 'off'
-                    ]) }}
+        <div class="form-group row">
+          <div class="col-12">{{ Form::label('cash_advance', 'Cash Advance') }}</div>
+          <div class="col-6">
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                  <div class="input-group-text">Rp.</div>
               </div>
+              {{ Form::text('cash_advance', '', [
+                'class' => 'form-control money',
+                'id' => 'cash_advance',
+                'placeholder' => 'Input cash advance if available'
+              ]) }}
             </div>
+          </div>
+        </div>
 
-            <div class="form-group row">
-              <div class="col-12">{{ Form::label('cash_advance', 'Cash Advance') }}</div>
-              <div class="col-6">
+        <div class="form-group row">
+          <div class="col-12">{{ Form::label('description', 'Description') }}</div>
+          <div class="col-9">
+            {{ Form::textarea('description', '', [
+              'rows' => 2,
+              'placeholder' => 'Type description if any',
+              'class' => 'form-control'
+            ]) }}
+          </div>
+        </div>
+
+        <div class="expenses">
+          <p>Expenses: <a href="javascript:void(0);" id="addExpense">Add more expenses</a></p>
+          <div class="expense-0">
+            <div class="form-group form-row">
+              <div class="col-auto">
+                {{ Form::select('expenses[0][type]', $expenseTypes, '', [
+                  'placeholder' => 'Choose expense type',
+                  'class' => 'custom-select'
+                ]) }}
+              </div>
+              <div class="col-auto">
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                       <div class="input-group-text">Rp.</div>
+                      {{ Form::hidden('expenses[0][currency]', 1) }}
                   </div>
-                  {{ Form::text('cash_advance', '', [
-                    'class' => 'form-control',
-                    'placeholder' => 'Input cash advance if available'
+                  {{ Form::text('expenses[0][amount]', '', [
+                  'placeholder' => 'Input the amount',
+                  'class' => 'form-control money',
+                  'id' => 'amount0'
                   ]) }}
                 </div>
               </div>
-            </div>
-
-            <div class="form-group row">
-              <div class="col-12">{{ Form::label('description', 'Description') }}</div>
+              <div class="col-auto">
+                {{ Form::file('expenses[0][file][]', $attributes = [
+                  'id' => 'attachments0',
+                  'class' => 'custom-file-input',
+                  'multiple' => 'multiple',
+                ]) }}
+                {{ Form::label('attachments0', 'Attachments', [
+                  'class' => 'custom-file-label'
+                ]) }}
+              </div>
               <div class="col-9">
-                {{ Form::textarea('description', '', [
-                  'rows' => 2,
-                  'placeholder' => 'Type description if any',
+                {{ Form::textarea('expenses[0][remarks]', '', [
+                  'rows' => 4,
+                  'placeholder' => 'Type remarks if any',
                   'class' => 'form-control'
                 ]) }}
               </div>
             </div>
-
-            <div class="expenses">
-              <p>Expenses: <a href="javascript:void(0);" id="addExpense">Add more expenses</a></p>
-              <div class="expense-0">
-                <div class="form-group form-row">
-                  <div class="col-auto">
-                    {{ Form::select('expenses[0][type]', $expenseTypes, '', [
-                      'placeholder' => 'Choose expense type',
-                      'class' => 'custom-select'
-                    ]) }}
-                  </div>
-                  <div class="col-auto">
-                    <div class="input-group mb-2">
-                      <div class="input-group-prepend">
-                          <div class="input-group-text">Rp.</div>
-                          {{ Form::hidden('expenses[0][currency]', 1) }}
-                      </div>
-                      {{ Form::text('expenses[0][amount]', '', [
-                      'placeholder' => 'Input the amount',
-                      'class' => 'form-control'
-                      ]) }}
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    {{ Form::file('expenses[0][file][]', $attributes = [
-                      'id' => 'attachments0',
-                      'class' => 'custom-file-input',
-                      'multiple' => 'multiple',
-                    ]) }}
-                    {{ Form::label('attachments0', 'Attachments', [
-                      'class' => 'custom-file-label'
-                    ]) }}
-                  </div>
-                  <div class="col-9">
-                    {{ Form::textarea('expenses[0][remarks]', '', [
-                      'rows' => 4,
-                      'placeholder' => 'Type remarks if any',
-                      'class' => 'form-control'
-                    ]) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          {{ Form::submit('Submit!', ['class' => 'btn btn-primary']) }}
-          {{ Form::close() }}
+          </div>
         </div>
-      </div>
+
+      {{ Form::submit('Submit!', ['class' => 'btn btn-primary', 'id' => 'form-submit']) }}
+      {{ Form::close() }}
     </div>
   </div>
-</div>
 @endsection
 
 @push('scripts')
+  <script src="{{ asset('js/moment.min.js') }}"></script>
+  <script src="{{ asset('js/daterangepicker.min.js') }}"></script>
+  <script src="{{ asset('js/jquery.mask.min.js') }}"></script>
   <script>
     // DATERANGE PICKER
     $('input[name="period_date"]').daterangepicker({
@@ -179,7 +168,7 @@
       expenseHTML += '</option></select></div>';
 
       // amount
-      expenseHTML += '<div class="col-auto"><div class="input-group mb-2"><div class="input-group-prepend"><div class="input-group-text">Rp.</div><input name="expenses[' + x +'][currency]" type="hidden" value="1"></div><input placeholder="Input the amount" class="form-control" name="expenses[' + x + '][amount]" type="text" value=""></div></div>';
+      expenseHTML += '<div class="col-auto"><div class="input-group mb-2"><div class="input-group-prepend"><div class="input-group-text">Rp.</div><input name="expenses[' + x +'][currency]" type="hidden" value="1"></div><input placeholder="Input the amount" class="form-control money" id="amount' + x + '" name="expenses[' + x + '][amount]" type="text" value=""></div></div>';
 
       // attachments
       expenseHTML += '<div class="col-auto"><input id="attachments' + x + '" class="custom-file-input" multiple="multiple" name="expenses[' + x + '][file][]" type="file"><label for="attachments' + x + '" class="custom-file-label">Attachments</label></div>';
@@ -194,6 +183,9 @@
 
       wrapper.append(expenseHTML);
       x++;
+
+      // call mask-it event
+      $(this).trigger('mask-it');
     });
 
     // on remove expense click
@@ -201,6 +193,27 @@
         e.preventDefault();
         $(this).parent('div').parent('div').remove(); //Remove field html
     });
+
+    // MASK
+    // all mask's definition goes inside of this method below.
+    var handleMasks = function (){
+      $('.money').mask("#.##0", {reverse: true});
+    };
+
+    // this event should be triggered everythime you want to redefine masks
+    // and search for new HTML elements.
+    $(document).on('mask-it', function(){
+        handleMasks();
+    }).trigger('mask-it');
+
+    $('#form-submit').on('click', function(e) {
+      e.preventDefault();
+      $('.money').each(function(i, obj) {
+        $('#' + obj.id).val($('#' + obj.id).cleanVal());
+      });
+
+      $('#expense_claim-form').submit();
+    })
 
   </script>
 @endpush

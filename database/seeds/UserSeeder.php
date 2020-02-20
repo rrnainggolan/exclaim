@@ -15,11 +15,6 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Ricardo Nainggolan',
-                'email' => 'ricardo.nainggolan@arnocindonesia.com',
-                'password' => Hash::make('123456')
-            ],
-            [
                 'name' => 'Aristo Getriadi',
                 'email' => 'aristo.getriadi@arnocindonesia.com',
                 'password' => Hash::make('123456')
@@ -33,7 +28,17 @@ class UserSeeder extends Seeder
                 'name' => 'Nopay',
                 'email' => 'nopay@arnocindonesia.com',
                 'password' => Hash::make('123456')
-            ]
+            ],
+            [
+                'name' => 'Ricardo Nainggolan',
+                'email' => 'ricardo.nainggolan@arnocindonesia.com',
+                'password' => Hash::make('123456')
+            ],
+            [
+                'name' => 'User',
+                'email' => 'user@arnocindonesia.com',
+                'password' => Hash::make('123456')
+            ],
         ];
 
         foreach($users as $user) {

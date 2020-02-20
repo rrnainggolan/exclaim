@@ -25,6 +25,7 @@ class CreateExpenseClaimsApprovedTable extends Migration
             $table->boolean('approved');
             $table->text('reason')->nullable();
             $table->timestamps();
+            $table->unique(['expense_claim_id', 'user_id']);
         });
     }
 

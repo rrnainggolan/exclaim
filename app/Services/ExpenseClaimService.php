@@ -4,58 +4,76 @@ namespace App\Services;
 
 use App\ExpenseClaim;
 use App\Repositories\ExpenseClaimRepository;
+use App\ExpenseClaimsApproved;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseClaimService
 {
     /**
-     * Get all expense claims
+     * Get all pending expense claims
+     * that belong to logged in user
      * 
-     * @return App\ExpenseClaim
+     * @return Illuminate\Support\Collection
      */
-    public function getExpenseClaims()
+    public function getMyPendingExpenseClaims()
     {
-        $expenseClaims = ExpenseClaim::all();
+        $expenseClaimRepository = new ExpenseClaimRepository();
+        $expenseClaims = $expenseClaimRepository->getActiveExpenseClaims(Auth::user()->id);
 
         return $expenseClaims;
     }
 
     /**
-     * Get all expense claims by specific user
+     * Get all completed expense claims
+     * that belong to logged in user
      * 
      * @return Illuminate\Support\Collection
      */
-    public function getExpenseClaimsByUserId($userId)
+    public function getMyCompletedExpenseClaims()
     {
         $expenseClaimRepository = new ExpenseClaimRepository();
-        $expenseClaims = $expenseClaimRepository->getExpenseClaimsByUserId($userId);
+        $expenseClaims = $expenseClaimRepository->getCompletedExpenseClaims(Auth::user()->id);
 
         return $expenseClaims;
     }
 
     /**
-     * Get all pending expense claims by specific user
+     * Get all active expense claims
      * 
-     * @return Illuminate\Support\Collection
+     * @return Array
      */
-    public function getExpenseClaimsPendingByUserId($userId)
+    public function getActiveExpenseClaims()
     {
+        $data = [];
+        $data['approved'] = [];
         $expenseClaimRepository = new ExpenseClaimRepository();
-        $expenseClaims = $expenseClaimRepository->getExpenseClaimsPendingByUserId($userId);
+        $expenseClaims = $expenseClaimRepository->getActiveExpenseClaims();
 
-        return $expenseClaims;
+        foreach($expenseClaims as $key => $value) {
+            if($value->approver_id === Auth::user()->id || $value->user_id === Auth::user()->id) {
+                $expenseClaims->forget($key);
+                if($value->user_id != Auth::user()->id) {
+                    $data['approved'][] = $value;
+                }
+            }
+        }
+
+        $data['unapproved'] = $expenseClaims;
+
+        return $data;
     }
 
     /**
-     * Get all completed expense claims by specific user
+     * Get all completed expense claims
      * 
      * @return Illuminate\Support\Collection
      */
-    public function getExpenseClaimsCompletedByUserId($userId)
+    public function getCompletedExpenseClaims()
     {
         $expenseClaimRepository = new ExpenseClaimRepository();
-        $expenseClaims = $expenseClaimRepository->getExpenseClaimsCompletedByUserId($userId);
+        $completedExpenseClaims = $expenseClaimRepository->getCompletedExpenseClaims();
 
-        return $expenseClaims;
+        return $completedExpenseClaims;
     }
 
     /**
@@ -81,5 +99,53 @@ class ExpenseClaimService
         $expenseClaim = ExpenseClaim::create($data);
 
         return $expenseClaim;
+    }
+
+    /**
+     * Approve the expense claim
+     * 
+     * @return App\ExpenseClaimApproved
+     */
+    public function approveClaim(Array $data)
+    {
+        // Check if claim already approved by this user
+        $approvedCheck = ExpenseClaimsApproved::where('expense_claim_id', $data['expense_claim_id'])
+            ->where('user_id', $data['user_id'])->first();
+
+        // Check if claim already rejected by other users
+        $rejectedCheck = $approvedCheck = ExpenseClaimsApproved::where('expense_claim_id', $data['expense_claim_id'])
+        ->where('approved', 0)->first();
+
+        if($approvedCheck || $rejectedCheck) {
+            return null;
+        }
+
+        $expenseClaimApproved = ExpenseClaimsApproved::create($data);
+
+        return $expenseClaimApproved;
+    }
+
+    /**
+     * Reject the expense claim
+     * 
+     * @return App\ExpenseClaimApproved
+     */
+    public function rejectClaim(Array $data)
+    {
+        // Check if claim already approved by this user
+        $approvedCheck = ExpenseClaimsApproved::where('expense_claim_id', $data['expense_claim_id'])
+            ->where('user_id', $data['user_id'])->first();
+
+        // Check if claim already rejected by other users
+        $rejectedCheck = $approvedCheck = ExpenseClaimsApproved::where('expense_claim_id', $data['expense_claim_id'])
+        ->where('approved', 0)->first();
+
+        if($approvedCheck || $rejectedCheck) {
+            return null;
+        }
+
+        $expenseClaimRejected = ExpenseClaimsApproved::create($data);
+
+        return $expenseClaimRejected;
     }
 }
