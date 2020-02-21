@@ -52,6 +52,22 @@
             @endif
             @else
             <li class="nav-item dropdown">
+              @can('manage.expense-type')
+                <a id="adminDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" v-pre>
+                  Manage <span class="caret"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="adminDropdown">
+                  <a class="dropdown-item" href="{{ route('expense-types.index') }}">
+                    Expense Types
+                  </a>
+                  <a class="dropdown-item" href="{{ route('expense-types.index') }}">
+                    Users
+                  </a>
+                </div>
+              @endcan
+            </li>
+            <li class="nav-item dropdown">
               <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" v-pre>
                 {{ Auth::user()->name }} <span class="caret"></span>
