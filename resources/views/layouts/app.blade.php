@@ -61,7 +61,7 @@
                   <a class="dropdown-item" href="{{ route('expense-types.index') }}">
                     Expense Types
                   </a>
-                  <a class="dropdown-item" href="{{ route('expense-types.index') }}">
+                  <a class="dropdown-item" href="{{ route('users.index') }}">
                     Users
                   </a>
                 </div>

@@ -33,5 +33,7 @@ Route::post('expense-claims/{id}/reject', 'ExpenseClaimController@reject')
 
 Route::resource('expense-types', 'ExpenseTypeController');
 
+Route::resource('users', 'UserController');
+
 Route::get('/{foldername}/{filename}', 'FileController')->where(['filename' => '.*']);
 
