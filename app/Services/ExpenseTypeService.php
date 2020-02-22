@@ -54,6 +54,11 @@ class ExpenseTypeService
         return $expenseType;
     }
 
+    /**
+     * Delete Expense Type
+     * 
+     * @return int
+     */
     public function deleteExpenseType(ExpenseType $expenseType)
     {
         $id = $expenseType->id;
