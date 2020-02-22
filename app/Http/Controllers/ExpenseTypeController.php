@@ -110,9 +110,6 @@ class ExpenseTypeController extends Controller
         $expenseTypeService = new ExpenseTypeService();
         $expenseTypeName = $expenseType->name;
         $expenseTypeService->deleteExpenseType($expenseType);
-
-        $sen['success'] = true;
-        $sen['result'] = $expenseTypeService;
         
         return response()->json([
             'name' => $expenseTypeName,
