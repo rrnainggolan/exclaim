@@ -98,6 +98,18 @@ class ExpenseClaimService
     {
         $expenseClaim = ExpenseClaim::create($data);
 
+        // Check if requester is Admin
+        $role = Auth::user()->roles[0]->name;
+        if($role == 'admin') {
+            $data = [
+                'expense_claim_id' => $expenseClaim->id,
+                'user_id' => Auth::user()->id,
+                'approved' => 1
+            ];
+
+            $this->approveClaim($data);
+        }
+
         return $expenseClaim;
     }
 
