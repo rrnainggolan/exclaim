@@ -64,4 +64,19 @@ class ExpenseClaimRepository
 
         return $expenseClaims;
     }
+
+    /**
+     * Get all approved expense claims by specific user
+     * 
+     * @return Illuminate\Support\Collection
+     */
+    public function getApprovedExpenseClaims($userId=NULL) 
+    {
+        $query = $this->getExpenseClaimsQuery($userId);
+        $expenseClaims = $query->havingRaw(
+            'COUNT(DISTINCT expense_claims_approved.user_id) >= ?', [2]
+        )->get();
+
+        return $expenseClaims;
+    }
 }
