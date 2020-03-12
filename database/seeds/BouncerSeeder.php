@@ -24,7 +24,13 @@ class BouncerSeeder extends Seeder
         $user = User::find(5);
         $user->assign('user');
 
+        $user = User::find(6);
+        $user->assign('reviewer');
+
         Bouncer::allow('admin')->everything();
-        Bouncer::forbid('admin')->toOwn(ExpenseClaim::class)->to('approve');
+        Bouncer::allow('reviewer')->to('view-approved-claims');
+        //Bouncer::forbid('admin')->toOwn(ExpenseClaim::class)->to('approve');
+        Bouncer::allowEveryone()->toOwn(ExpenseClaim::class)->to('view');
+
     }
 }
