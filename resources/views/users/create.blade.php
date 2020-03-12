@@ -49,6 +49,7 @@
           {{ Form::select('role',
           [
               'user' => 'User',
+              'reviewer' => 'Reviewer',
               'admin' => 'Admin'
           ],
           '', ['class' => 'custom-select form-control required']) }}
