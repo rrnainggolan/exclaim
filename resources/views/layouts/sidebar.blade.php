@@ -6,6 +6,9 @@
         Active Claims
       </a>
     </li>
+  @endcan
+
+  @can('view-approved-claims')
     <li class="nav-item">
       <a class="nav-link {{ request()->routeIs('expense-claims.completed') ? 'active' : '' }}" 
         href="{{ route('expense-claims.completed') }}">
@@ -13,6 +16,7 @@
       </a>
     </li>
   @endcan
+
   <li class="nav-item">
     <a class="nav-link {{ request()->routeIs(['expense-claims.index', 'home']) ? 'active' : '' }}" 
     href="{{ route('expense-claims.index') }}">
