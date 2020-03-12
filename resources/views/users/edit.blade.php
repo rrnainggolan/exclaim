@@ -56,7 +56,8 @@
           {{ Form::select('role',
           [
               'user' => 'User',
-              'admin' => 'Admin'
+              'reviewer' => 'Reviewer',
+              'admin' => 'Admin',
           ],
           $user->roles[0]->name, ['class' => 'custom-select form-control required']) }}
         </div>
