@@ -77,6 +77,19 @@ class ExpenseClaimService
     }
 
     /**
+     * Get all approved expense claims
+     * 
+     * @return Illuminate\Support\Collection
+     */
+    public function getApprovedExpenseClaims()
+    {
+        $expenseClaimRepository = new ExpenseClaimRepository();
+        $approvedExpenseClaims = $expenseClaimRepository->getApprovedExpenseClaims();
+
+        return $approvedExpenseClaims;
+    }
+
+    /**
      * Get specific expense claim
      * 
      * @return App\ExpenseClaim
