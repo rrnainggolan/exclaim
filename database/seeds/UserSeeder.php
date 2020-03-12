@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('123456')
             ],
             [
-                'name' => 'Nopay',
-                'email' => 'nopay@arnocindonesia.com',
+                'name' => 'Maryadi Tirtana',
+                'email' => 'maryadi.tirtana@arnocindonesia.com',
                 'password' => Hash::make('123456')
             ],
             [
@@ -35,8 +35,13 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('123456')
             ],
             [
-                'name' => 'User',
-                'email' => 'user@arnocindonesia.com',
+                'name' => 'Yuaf Rinaldi',
+                'email' => 'yuaf.rinaldi@arnocindonesia.com',
+                'password' => Hash::make('123456')
+            ],
+            [
+                'name' => 'Rendri',
+                'email' => 'rendri.rahardian@gmail.com',
                 'password' => Hash::make('123456')
             ],
         ];
