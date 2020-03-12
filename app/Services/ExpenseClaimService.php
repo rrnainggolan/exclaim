@@ -6,6 +6,12 @@ use App\ExpenseClaim;
 use App\Repositories\ExpenseClaimRepository;
 use App\ExpenseClaimsApproved;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ExpenseClaimRequested;
+use App\Notifications\ExpenseClaimApproved;
+use App\Notifications\ExpenseClaimRejected;
+use App\Notifications\ExpenseClaimRequestedTelegram;
+use App\User;
 
 class ExpenseClaimService
 {
@@ -123,6 +129,12 @@ class ExpenseClaimService
             $this->approveClaim($data);
         }
 
+        $users = User::whereIs('admin')->get();
+        Notification::send($users, new ExpenseClaimRequested($expenseClaim));
+
+        $user = $expenseClaim->user;
+        $user->notify(new ExpenseClaimRequestedTelegram($expenseClaim));
+
         return $expenseClaim;
     }
 
@@ -147,6 +159,15 @@ class ExpenseClaimService
 
         $expenseClaimApproved = ExpenseClaimsApproved::create($data);
 
+        $expenseClaim = ExpenseClaim::find($data['expense_claim_id']);
+        if($expenseClaim->expenseClaimsApproved()->count() > 1) {
+            $user = $expenseClaim->user;
+            $user->notify(new ExpenseClaimApproved($expenseClaim, 'user'));
+        } else {
+            $users = User::whereIs('admin')->get();
+            Notification::send($users, new ExpenseClaimApproved($expenseClaim, 'admin'));
+        }
+
         return $expenseClaimApproved;
     }
 
@@ -170,6 +191,13 @@ class ExpenseClaimService
         }
 
         $expenseClaimRejected = ExpenseClaimsApproved::create($data);
+
+        $expenseClaim = ExpenseClaim::find($data['expense_claim_id']);
+
+        $user = $expenseClaim->user;
+        $user->notify(new ExpenseClaimRejected($expenseClaim, 'user'));
+        $users = User::whereIs('admin')->get();
+        Notification::send($users, new ExpenseClaimRejected($expenseClaim, 'admin'));
 
         return $expenseClaimRejected;
     }
