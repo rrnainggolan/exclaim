@@ -108,6 +108,8 @@ class ExpenseClaimController extends Controller
         $expenseClaimService = new ExpenseClaimService();
         $expenseClaim = $expenseClaimService->getExpenseClaim($id);
 
+        $this->authorize('view', $expenseClaim);
+
         return view('expense-claims.show', compact('expenseClaim'));
     }
 
@@ -168,10 +170,17 @@ class ExpenseClaimController extends Controller
      */
     public function completed()
     {
-        $this->authorize('approve-claims');
+        $user = Auth::user();
+        //$this->authorize('approve-claims');
+        $this->authorize('view-approved-claims');
 
         $expenseClaimService = new ExpenseClaimService();
-        $completedExpenseClaims = $expenseClaimService->getCompletedExpenseClaims();
+
+        if($user->can('approve-claims')) {
+            $completedExpenseClaims = $expenseClaimService->getCompletedExpenseClaims();
+        } else {
+            $completedExpenseClaims = $expenseClaimService->getApprovedExpenseClaims();
+        }
 
         return view('expense-claims.completed', compact('completedExpenseClaims'));
     }
