@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\MessageBag;
 
 class UserController extends Controller
 {
@@ -133,5 +136,48 @@ class UserController extends Controller
             'name' => $userName,
             'success' => true
         ]);
+    }
+
+    /**
+     * Show the form for editing password.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function editPassword($id)
+    {
+        return view('users.edit_password');
+    }
+
+    /**
+     * Update the password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePassword(Request $request, $id)
+    {
+        $this->validate($request, [
+            'current_password'=>'required|min:6',
+            'password'=>'required|min:6|confirmed'
+        ]);
+
+        if(Hash::check($request->current_password, Auth::user()->password)) {
+            $request->user()->fill([
+                'password' => Hash::make($request->password)
+            ])->save();
+
+            return redirect()->route('home')
+                ->with('flash_message', 'Your password successfully updated.')
+                ->with('class', 'success');
+        } else {
+            $errors = new MessageBag();
+            $errors->add('current_password_not_match', 'Current password not match! Please try again.');
+
+            return redirect()->route('edit.password', ['id' => $id])
+                ->with('errors', $errors)
+                ->with('class', 'alert');
+        }
     }
 }
