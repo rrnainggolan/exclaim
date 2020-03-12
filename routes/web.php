@@ -34,6 +34,8 @@ Route::post('expense-claims/{id}/reject', 'ExpenseClaimController@reject')
 Route::resource('expense-types', 'ExpenseTypeController');
 
 Route::resource('users', 'UserController');
+Route::get('/users/{id}/edit-password', 'UserController@editPassword')->name('edit.password');
+Route::post('/users/{id}/update-password', 'UserController@updatePassword')->name('update.password');
 
 Route::get('/{foldername}/{filename}', 'FileController')->where(['filename' => '.*']);
 
