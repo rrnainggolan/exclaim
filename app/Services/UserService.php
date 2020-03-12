@@ -5,6 +5,8 @@ namespace App\Services;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Exception;
+use App\Notifications\UserCreated;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -29,12 +31,14 @@ class UserService
     {
         $role = $userData['role'];
         unset($userData['role']);
-        //$password = $this->randomString(12);
-        $password = '123456';
+        $password = Str::random(8);
+        //$password = '123456';
         $userData['password'] = Hash::make($password);
 
         $user = User::create($userData);
         $user->assign($role);
+
+        $user->notify(new UserCreated($user, $password));
 
         return $user;
     }
@@ -72,19 +76,5 @@ class UserService
         $user->delete();
 
         return $id;
-    }
-
-    private function randomString($length)
-    {
-        $keySpace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $str = '';
-        $max = mb_strlen($keySpace, '8bit') - 1;
-        if($max < 1) {
-            throw new Exception($keySpace . ' must be at least two characters long');
-        }
-        for($i = 0; $i < $length; ++$i) {
-            $str .= $keySpace[random_int(0, $max)];
-        }
-        return $str;
     }
 }
