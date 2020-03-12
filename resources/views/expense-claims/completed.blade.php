@@ -26,9 +26,13 @@
             <tr>
               <th scope="row">{{ $loop->iteration }}</th>
               <td>
+                @if(Auth::user()->can('view-all-claims'))
                 <a href="{{ route('expense-claims.show', $completedExpenseClaim->id) }}">
                     EXP-{{ str_pad($completedExpenseClaim->id, 6, '0', STR_PAD_LEFT) }}
                 </a>
+                @else
+                  EXP-{{ str_pad($completedExpenseClaim->id, 6, '0', STR_PAD_LEFT) }}
+                @endif
               </td>
               <td>{{ $completedExpenseClaim->user_name }}</td>
               <td class="d-none d-sm-table-cell">
