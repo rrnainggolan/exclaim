@@ -17,11 +17,12 @@ class ExpenseClaimRepository
         $expenseClaimsQuery = DB::table('expense_claims')
             ->select([
                 'expense_claims.*',
-                DB::raw('SUM(DISTINCT expenses.amount) AS amount_total'),
+                // DB::raw('SUM(DISTINCT expenses.amount) AS amount_total'),
+                DB::raw('SUM(expenses.amount) AS amount_total'),
                 // DB::raw('SUM(DISTINCT expense_claims_approved.approved) AS total_approved'),
                 DB::raw('SUM(expense_claims_approved.approved) AS total_approved'),
                 DB::raw('users.name AS user_name'),
-                DB::raw('ANY_VALUE(expense_claims_approved.user_id) AS approver_id')
+                DB::raw('MAX(expense_claims_approved.user_id) AS approver_id')
             ])
             ->leftJoin('expenses', 'expense_claims.id', '=', 'expenses.expense_claim_id')
             ->leftJoin('expense_claims_approved', 'expense_claims.id', '=', 'expense_claims_approved.expense_claim_id')
