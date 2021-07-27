@@ -79,7 +79,7 @@
               @money(($myCompletedExpenseClaim->amount_total - $myCompletedExpenseClaim
                 ->cash_advance), 'IDR', true)
             </td>
-            <td>{{ $myCompletedExpenseClaim->total_approved == 2 ? "Approved" : "Rejected" }}</td>
+            <td>{{ $myCompletedExpenseClaim->total_approved >= 2 ? "Approved" : "Rejected" }}</td>
           </tr>
           @endforeach
         </tbody>
